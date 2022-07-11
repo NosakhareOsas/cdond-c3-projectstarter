@@ -20,10 +20,10 @@
     state: latest
     update_cache: yes
 
-- name: install Python
+- name: install PM2
   become: yes
-  apt:
-    name: python
+  npm:
+    name: pm2
     global: yes
-    state: latest
-    update_cache: yes
+    production: yes
+    version: 3.5.2
