@@ -178,9 +178,6 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - run: yum install -y tar gzip
-      - attach_workspace:
-          at: ~/
       - add_ssh_keys:
           # You can get this ID in the section where you registered the SSH Key
           fingerprints: ["a3:28:7c:34:8a:b1:b2:94:4f:cc:1a:d4:7b:14:fe:23"]
@@ -196,6 +193,10 @@ jobs:
             sudo apt update
             sudo apt install -y python3 python3-pip
             python3 -m pip install --user ansible
+
+      - run: yum install -y tar gzip
+      - attach_workspace:
+          at: ~/
       - run:
           name: Run Playbook and Configure server
           command: |
