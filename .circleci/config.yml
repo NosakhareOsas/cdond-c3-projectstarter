@@ -161,16 +161,32 @@ jobs:
           command: |
             aws ec2 describe-instances   \
             --query 'Reservations[*].Instances[*].PublicIpAddress'  \
-            --output text >> ~/project/.circleci/ansible/inventory;
-            echo --- >> ~/project/.circleci/ansible/inventory;
+            --output text >> cdond-c3-projectstarter/.circleci/ansible/inventory.txt;
+            echo --- >> ~/udacity/cdond-c3-projectstarter/.circleci/ansible/inventory.txt;
             
       - persist_to_workspace:
-          root: ~/
+          root: ~/udacity
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
 
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.16
+    steps:
+      - checkout
+      - add_ssh_keys:
+          # You can get this ID in the section where you registered the SSH Key
+          fingerprints: ["a3:28:7c:34:8a:b1:b2:94:4f:cc:1a:d4:7b:14:fe:23"] 
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible 
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+              ansible-playbook main-remote.yml -i inventory
 
 workflows:    
   default:
