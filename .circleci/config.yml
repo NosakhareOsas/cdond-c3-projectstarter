@@ -197,6 +197,7 @@ jobs:
 workflows:    
   default:
     jobs:
+        - configure_infrastructure
       #- build-frontend
       #- build-backend
       #- test-frontend:
@@ -208,5 +209,5 @@ workflows:
      # - scan-backend:
       #    requires: [test-backend]
      # - deploy-infrastructure
-        - configure_infrastructure
+        
       
