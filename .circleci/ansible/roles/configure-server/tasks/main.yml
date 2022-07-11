@@ -1,0 +1,29 @@
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: "remove dependencies no longer needed"
+  become: yes
+  apt:
+    autoremove: yes
+
+- name: "install nodejs and npm"
+  become: yes
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+
+- name: install Python
+  become: yes
+  npm:
+    name: python
+    global: yes
+    state: latest
+    update_cache: yes
