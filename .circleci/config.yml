@@ -1,6 +1,13 @@
 version: 2.1
 orbs: 
   slack: circleci/slack@4.10.1
+commands:
+  slackNotify:
+    steps:
+      - slack/notify:
+          channel: ${SLACK_DEFAULT_CHANNEL}
+          event: fail
+          template: basic_fail_1
 jobs:
   build-frontend:
     docker:
@@ -13,15 +20,12 @@ jobs:
           name: Build front-end
           command: |
             cd frontend
-            npN install
+            npn install
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-      - slack/notify:
-          channel: ${SLACK_DEFAULT_CHANNEL}
-          event: fail
-          template: basic_fail_1
+      - slackNotify
       
   build-backend:
     docker:
@@ -34,11 +38,12 @@ jobs:
           name: Back-end build
           command: |
             cd backend
-            npN install
+            npn install
             npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - slackNotify   
 
   test-frontend:
     docker:
