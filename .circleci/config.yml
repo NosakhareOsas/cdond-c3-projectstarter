@@ -161,13 +161,13 @@ jobs:
           command: |
             aws ec2 describe-instances   \
             --query 'Reservations[*].Instances[*].PublicIpAddress'  \
-            --output text >> cdond-c3-projectstarter/.circleci/ansible/inventory.txt;
+            --output text >> .circleci/ansible/inventory.txt;
             echo --- >> ~/udacity/cdond-c3-projectstarter/.circleci/ansible/inventory.txt;
             
       - persist_to_workspace:
-          root: ~/udacity
+          root: ~/udacity/cdond-c3-projectstarte
           paths:
-            - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
 
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
@@ -186,6 +186,7 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
+              
               ansible-playbook main-remote.yml -i inventory
 
 workflows:    
