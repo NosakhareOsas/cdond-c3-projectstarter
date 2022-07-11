@@ -178,7 +178,6 @@ jobs:
       - image: amazon/aws-cli  #python:3.7-alpine3.16
     steps:
       - checkout
-      - run: yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - add_ssh_keys:

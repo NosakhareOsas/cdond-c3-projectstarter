@@ -22,7 +22,7 @@
 
 - name: install Python
   become: yes
-  npm:
+  apt:
     name: python
     global: yes
     state: latest
