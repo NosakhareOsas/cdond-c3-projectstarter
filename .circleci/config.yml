@@ -116,8 +116,7 @@ jobs:
 workflows:    
   default:
     jobs:
-      - build-frontend:
-          context: ${SLACK_ACCESS_TOKEN}
+      - build-frontend
       - build-backend
       - test-frontend:
           requires: [build-frontend]
