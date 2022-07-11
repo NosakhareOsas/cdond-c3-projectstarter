@@ -101,7 +101,7 @@ jobs:
             npm audit fix --force
             npm install --save-dev webpack@5.73.0
             npm update mkdirp --depth 2
-            npm audit --audit-level=critical
+            npm audit --audit-level=critical --force
             
       - save_cache:
           paths: [backend/node_modules]
