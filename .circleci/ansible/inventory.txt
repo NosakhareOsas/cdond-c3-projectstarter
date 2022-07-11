@@ -1,2 +1,1 @@
 [web]
-/home/harambe/udacity/cdond-c3-projectstarter/.circleci/ansible/inventory.txt
