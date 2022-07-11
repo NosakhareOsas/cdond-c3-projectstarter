@@ -1,4 +1,6 @@
 version: 2.1
+orbs: 
+  slack: circleci/slack@4.10.1
 jobs:
   build-frontend:
     docker:
@@ -11,11 +13,15 @@ jobs:
           name: Build front-end
           command: |
             cd frontend
-            npm install
+            npN install
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - slack/notify:
+          channel: ${SLACK_DEFAULT_CHANNEL}
+          event: fail
+          template: basic_fail_1
       
   build-backend:
     docker:
@@ -28,7 +34,7 @@ jobs:
           name: Back-end build
           command: |
             cd backend
-            npm install
+            npN install
             npm run build
       - save_cache:
           paths: [backend/node_modules]
@@ -110,7 +116,8 @@ jobs:
 workflows:    
   default:
     jobs:
-      - build-frontend
+      - build-frontend:
+          context: ${SLACK_ACCESS_TOKEN}
       - build-backend
       - test-frontend:
           requires: [build-frontend]
