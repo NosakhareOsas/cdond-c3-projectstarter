@@ -16,7 +16,7 @@
 - name: "install nodejs, npm and python"
   become: yes
   apt:
-    name: ["nodejs", "npm", "python2" "python3"]
+    name: ["nodejs", "npm", "python2", "python3"]
     state: latest
     update_cache: yes
 
