@@ -46,8 +46,10 @@ commands:
           name: Install NPM and Node
           command: |
               sudo apt update
-              sudo apt install nodejs@latest npm@latest
+              sudo apt install nodejs npm
+              sudo npm update nodejs@latest npm@latest -g.
               nodejs --version
+              npm -v
 
 
 jobs:
