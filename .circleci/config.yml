@@ -209,7 +209,8 @@ jobs:
             workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   run-migrations:
-    <<: *defaults
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
@@ -219,6 +220,10 @@ jobs:
           command: |
             cd backend
             npm install
+            npm audit fix --force
+            npm install --save-dev webpack@5.73.0
+            npm update mkdirp --depth 2
+            npm audit fix --audit-level=critical --force
             npm run migrations > migrations_dump.txt 
       - run:
           name: Send migration results to memstash
