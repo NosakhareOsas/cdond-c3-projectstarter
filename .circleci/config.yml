@@ -202,10 +202,25 @@ jobs:
               cd .circleci/ansible
               ansible-playbook -i inventory.txt configure-server.yml
 
+  run-migrations:
+    docker:
+      - image: cimg/node:13.8.0
+    steps:
+      # Checkout code from git
+      - run:
+          name: Run migrations
+          command: |
+            npm -v
+      - run:
+          name: Send migration results to memstash
+          command: |
+            node -v 
+
 workflows:    
   default:
     jobs:
-        - configure_infrastructure
+      - run-migrations
+      
       #- build-frontend
       #- build-backend
       #- test-frontend:
@@ -217,5 +232,6 @@ workflows:
      # - scan-backend:
       #    requires: [test-backend]
      # - deploy-infrastructure
+     #  - configure_infrastructure
         
       
