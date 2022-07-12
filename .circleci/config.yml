@@ -178,7 +178,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - run: apt install -y tar gzip
+      - run: sudo apt install -y tar gzip
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
