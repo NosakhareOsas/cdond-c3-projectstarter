@@ -43,11 +43,11 @@ commands:
   install_npm_node:
     steps:
       - run:
-        name: Install NPM and Node
-        command: |
-            sudo apt update
-            sudo apt install nodejs npm
-            nodejs --version
+          name: Install NPM and Node
+          command: |
+              sudo apt update
+              sudo apt install nodejs npm
+              nodejs --version
 
 
 jobs:
