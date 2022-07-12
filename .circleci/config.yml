@@ -216,6 +216,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - install_aws_cli
+      - install_npm_node
       - run:
           name: Run and save migrations
           command: |
