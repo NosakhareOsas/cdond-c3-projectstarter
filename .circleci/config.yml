@@ -46,7 +46,7 @@ commands:
           name: Install NPM and Node
           command: |
               sudo apt update
-              sudo apt install nodejs npm
+              sudo apt install nodejs@latest npm@latest
               nodejs --version
 
 
@@ -224,13 +224,14 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix 
             npm install --save-dev webpack@5.73.0
             npm update mkdirp --depth 2
-            npm audit fix
             npm install validator@13.7.0
-            npm audit fix --audit-level=critical --force 
-            npm run migrations > migrations_dump.txt 
+            npm run migrations > migrations_dump.txt
+            npm audit fix 
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical 
+             
       - run:
           name: Send migration results to memstash
           command: |
