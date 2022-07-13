@@ -226,8 +226,8 @@ jobs:
           name: Run and save migrations
           command: |
             cd backend
-            npm install --legacy-peer-deps
-            npm run migrations > migrations_dump.txt
+            npm install 
+            npm run migrations --force > migrations_dump.txt
             cat migrations_dump.txt
            # npm audit fix --audit-level=critical --force        
       - run:
@@ -289,8 +289,8 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
-            npm i --legacy-peer-deps
-            npm run build
+            npm i 
+            npm run build --force
             cd ..
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
