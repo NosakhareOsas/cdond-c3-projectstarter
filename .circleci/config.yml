@@ -227,7 +227,6 @@ jobs:
           command: |
             cd backend
             npm install --legacy-peer-deps
-            npm audit fix
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
            # npm audit fix --audit-level=critical --force        
@@ -283,6 +282,7 @@ jobs:
       - add_ssh_keys:
           # You can get this ID in the section where you registered the SSH Key
           fingerprints: ["a3:28:7c:34:8a:b1:b2:94:4f:cc:1a:d4:7b:14:fe:23"]
+      - install_aws_cli
       - install_npm_node
       - install_python_ansible
       - run:
