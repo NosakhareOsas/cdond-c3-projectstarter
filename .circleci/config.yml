@@ -227,8 +227,9 @@ jobs:
           command: |
             cd backend
             npm install --legacy-peer-deps
+            npm audit fix
             npm run migrations > migrations_dump.txt
-           # npm audit fix
+            cat migrations_dump.txt
            # npm audit fix --audit-level=critical --force        
       - run:
           name: Send migration results to memstash
@@ -288,7 +289,7 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
-            npm i
+            npm i --legacy-peer-deps
             npm run build
             cd ..
             tar -C backend -czvf artifact.tar.gz .
