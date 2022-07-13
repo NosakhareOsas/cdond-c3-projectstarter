@@ -46,11 +46,11 @@ commands:
           name: Install NPM and Node
           command: |
               cd ~
-              sudo apt update
-              curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
-              sudo bash /tmp/nodesource_setup.sh
-              sudo apt install nodejs
-              node --version
+              curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+              sudo apt-get install -y nodejs
+              sudo npm install -g n
+              sudo n 13.8.0
+              node -v
               npm -v
 
 
@@ -145,12 +145,10 @@ jobs:
           name: Backend scan
           command: |
             cd backend
-            npm install
-            npm audit fix 
-            npm install --save-dev webpack@5.73.0
-            npm update mkdirp --depth 2
-            npm audit fix
-            npm audit fix --audit-level=critical --force
+            npm install 
+            npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
+            npm audit --audit-level=critical
 
   deploy-infrastructure:
     docker:
@@ -178,6 +176,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             BACKEND_IP=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
             echo ${BACKEND_IP} >> .circleci/ansible/inventory.txt;
@@ -226,9 +225,9 @@ jobs:
           name: Run and save migrations
           command: |
             cd backend
-            npm install --force
-            npm run migrations --force > migrations_dump.txt
-            echo "has been executed successfully." >> migrations_dump.txt
+            npm install
+            npm run migrations > migrations_dump.txt
+          #  echo "has been executed successfully." >> migrations_dump.txt
             cat migrations_dump.txt
            # npm audit fix --audit-level=critical --force        
       - run:
@@ -290,9 +289,10 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
-            npm i --legacy-peer-deps
-            npm run build --force
+            npm i 
+            npm run build 
             cd ..
+            echo "lets zip this file"
             tar -C backend -czvf artifact.tar.gz .
             ls -a
             cd .circleci/ansible

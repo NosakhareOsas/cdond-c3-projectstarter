@@ -1,53 +1,15 @@
-- name: "update apt packages."
-  become: yes
-  apt:
-    update_cache: yes
-
-- name: "upgrade packages"
-  become: yes
-  apt:
-    upgrade: yes
-
-- name: "remove dependencies no longer needed"
-  become: yes
-  apt:
-    autoremove: yes
-
-- name: "install nodejs, npm"
-  become: yes
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
-
-- name: "install python 2&3"
-  become: yes
-  apt:
-    name: ["python2", "python3"]
-    state: latest
-    update_cache: yes
-
-- name: install PM2
-  become: yes
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    version: 3.5.2
-
-- name: copy artifact to server
-  become: yes
+- name: copy artifact to EC2 server
   copy:
     src: ~/artifact.tar.gz
     dest: ~/artifact.tar.gz
     backup: yes
 
 - name: "Extract Artifact"
-  become: yes
-  shell: tar xvzf artifact.tar.gz
+  shell: |
+    cd ~
+    tar -xvzf artifact.tar.gz -C .
 
 - name: "start app "
-  become: yes
   shell: |
     npm install
     pm2 stop default

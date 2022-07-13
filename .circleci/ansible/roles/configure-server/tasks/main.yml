@@ -1,22 +1,28 @@
 - name: "update apt packages."
-  become: yes
   apt:
     update_cache: yes
 
 - name: "upgrade packages"
-  become: yes
   apt:
     upgrade: yes
 
 - name: "remove dependencies no longer needed"
-  become: yes
   apt:
     autoremove: yes
 
-- name: "install nodejs, npm and python"
-  become: yes
-  apt:
-    name: ["nodejs", "npm", "python2", "python3"]
-    state: latest
-    update_cache: yes
+- name: "install nodejs, npm"
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    sudo npm install -g n
+    sudo n 13.8.0
+    node -v
+    npm -v
+
+- name: install PM2
+  npm:
+    name: pm2
+    global: yes
+    #version: 3.5.2
+
 
