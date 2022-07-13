@@ -226,10 +226,10 @@ jobs:
           name: Run and save migrations
           command: |
             cd backend
-            npm install
+            npm install --legacy-peer-deps
             npm run migrations > migrations_dump.txt
-            npm audit fix
-            npm audit fix --audit-level=critical --force        
+           # npm audit fix
+           # npm audit fix --audit-level=critical --force        
       - run:
           name: Send migration results to memstash
           command: |
