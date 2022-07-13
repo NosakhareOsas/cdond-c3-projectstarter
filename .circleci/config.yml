@@ -226,8 +226,9 @@ jobs:
           name: Run and save migrations
           command: |
             cd backend
-            npm install 
+            npm install --force
             npm run migrations --force > migrations_dump.txt
+            echo "has been executed successfully." >> migrations_dump.txt
             cat migrations_dump.txt
            # npm audit fix --audit-level=critical --force        
       - run:
@@ -293,6 +294,7 @@ jobs:
             npm run build --force
             cd ..
             tar -C backend -czvf artifact.tar.gz .
+            ls -a
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
