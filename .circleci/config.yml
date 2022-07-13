@@ -226,7 +226,7 @@ jobs:
           name: Run and save migrations
           command: |
             cd backend
-            npm install --legacy-peer-deps
+            npm install 
             npm run migrations --force > migrations_dump.txt
             cat migrations_dump.txt
            # npm audit fix --audit-level=critical --force        
