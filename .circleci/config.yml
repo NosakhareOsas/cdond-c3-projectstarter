@@ -295,7 +295,7 @@ jobs:
             echo "lets zip this file"
             tar -C backend -czvf artifact.tar.gz .
             ls -a
-            mv -vf backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            mv -vf artifact.tar.gz .circleci/ansible/roles/deploy/files
             ls -a
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
