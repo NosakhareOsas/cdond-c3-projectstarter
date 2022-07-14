@@ -290,7 +290,7 @@ jobs:
           command: |
             cd backend
             npm i 
-            npm run build 
+            npm run build --force
             cd ..
             echo "lets zip this file"
             tar -C backend -czvf artifact.tar.gz .
