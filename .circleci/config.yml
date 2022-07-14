@@ -288,17 +288,20 @@ jobs:
       - run:
           name: Deploy backend
           command: |
+            pwd
             cd backend
             npm i 
             npm run build --force
             cd ..
-            echo "lets zip this file"
-            tar -C backend -czvf artifact.tar.gz .
             ls -a
-            mv -vf artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/files/artifact.tar.gz
+            tar -czvf artifact.tar.gz backend
+            ls -a
+            pwd
+            cp artifact.tar.gz .circleci/ansible/roles/deploy/files
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
+            pwd
             ansible-playbook -i inventory.txt deploy-backend.yml
 
       - destroy_environment:
