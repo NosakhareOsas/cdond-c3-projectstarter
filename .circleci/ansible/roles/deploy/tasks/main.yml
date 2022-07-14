@@ -1,6 +1,6 @@
 - name: copy artifact to EC2 server
   copy:
-    src: ~/artifact.tar.gz
+    src: artifact.tar.gz
     dest: ~/artifact.tar.gz
     backup: yes
 
