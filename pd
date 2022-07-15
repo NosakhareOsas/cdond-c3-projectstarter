@@ -1,0 +1,5 @@
+treat
+cd .circleci/ansible
+echo "Contents  of the inventory.txt file is -------"
+cat inventory.txt
+BACKEND_IP=$(cat inventory.txt)
