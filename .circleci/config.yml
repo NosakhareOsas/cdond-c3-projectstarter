@@ -206,8 +206,26 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
+              # add environment variable to server
+              echo ENVIRONMENT=production > backend/.env
+              echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> backend/.env
+              echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> backend/.env
+              echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> backend/.env
+              echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> backend/.env
+              # Use these values for the PG database
+              echo TYPEORM_HOST=$TYPEORM_HOST >> backend/.env
+              echo TYPEORM_PORT=$TYPEORM_PORT >> backend/.env
+              echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> backend/.env
+              echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> backend/.env
+              echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> backend/.env
+              cat backend/.env
               cd .circleci/ansible
               ansible-playbook -i inventory.txt configure-server.yml
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/backend/.env
 
       - destroy_environment:
             workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -219,6 +237,8 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
+      - attach_workspace:
+          at: ~/
       - install_aws_cli
       - install_npm_node
       - run:
@@ -285,23 +305,19 @@ jobs:
       - install_aws_cli
       - install_npm_node
       - install_python_ansible
+    
       - run:
-          name: Package Backend and move to ansible files
+          name: Deploy backend
           command: |
             cd backend
             npm i 
             npm run build --force
-            tar -czvf artifact.tar.gz dist/* package*
             cd ..
+            tar -C backend -czvf artifact.tar.gz .
             mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-            mv -vf backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-      - run:
-          name: Deploy backend
-          command: |
-            export TYPEORM_MIGRATIONS_DIR=./migrations
-            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-            export TYPEORM_MIGRATIONS=./migrations/*.ts
+            mv -vf artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz   
             cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy_environment:
@@ -331,7 +347,7 @@ jobs:
             --output text) 
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"      
-            if curl "${API_URL}/api/status" | grep "ok"
+            if -s curl "${API_URL}/api/status" | grep "ok"
             then
                 return 0
             else
@@ -349,7 +365,8 @@ jobs:
             else
               return 1
             fi
-      
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 workflows:    
   default:
