@@ -286,14 +286,15 @@ jobs:
       - install_npm_node
       - install_python_ansible
       - run:
-          name: Package Backend
+          name: Package Backend and move to ansible files
           command: |
             cd backend
             npm i 
             npm run build --force
-            tar -czf artifact.tar.gz dist/* package*
+            tar -czvf artifact.tar.gz dist/* package*
             cd ..
-            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
+            mv -vf backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
           command: |
