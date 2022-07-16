@@ -12,5 +12,4 @@
 - name: "start app "
   shell: |
     npm install
-    # pm2 stop default
     sudo pm2 start npm -- start
