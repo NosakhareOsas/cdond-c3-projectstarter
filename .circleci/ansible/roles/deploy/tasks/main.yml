@@ -1,17 +1,35 @@
-- name: copy artifact to EC2 server
-  become: true
-  copy:
-    src: artifact.tar.gz
+---
+- name: 'update and upgrade packages.'
+  become: yes
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400
+- name: remove unneeded deps
+  become: yes
+  apt:
+    autoremove: yes
+- name: install deps
+  become: yes
+  apt:
+    name: ['nodejs', 'npm']
+    state: latest
+    update_cache: yes
+- name: install pm2
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    state: latest
+    production: yes
+- name: extract artifact
+  become: yes
+  unarchive:
+    src: files/artifact.tar.gz
     dest: .
-    backup: yes
 
-- name: "Extract Artifact"
-  become: true
-  shell: |
-    tar -xvzf artifact.tar.gz -C .
-
-- name: "start app"
-  become: true
+- name: start app
+  become: yes
   shell: |
     pm2 delete all
     pm2 start npm -- start
