@@ -232,7 +232,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - checkout
       - restore_cache:
@@ -240,7 +240,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - install_aws_cli
-      
+      - install_npm_node
       - run:
           name: Run and save migrations
           command: |
@@ -255,7 +255,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then 
-              curl --insecure https://kvdb.io/PC7rSF6jLFj3Jc1CFkbcVH/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl https://kvdb.io/PC7rSF6jLFj3Jc1CFkbcVH/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -345,7 +345,7 @@ jobs:
             --output text) 
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"      
-            if curl "${API_URL}/api/status" | grep "ok"; then exit 0; else exit 0; fi
+            if curl "${API_URL}/api/status" | grep "ok"; then exit 0; else exit 1; fi
       - run:
           name: Frontend smoke test.
           command: |

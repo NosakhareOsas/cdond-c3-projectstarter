@@ -1,17 +1,15 @@
 - name: copy artifact to EC2 server
-  become: true
   copy:
     src: artifact.tar.gz
-    dest: .
+    dest: ~/artifact.tar.gz
     backup: yes
 
 - name: "Extract Artifact"
-  become: true
   shell: |
+    cd ~
     tar -xvzf artifact.tar.gz -C .
 
-- name: "start app"
-  become: true
+- name: "start app "
   shell: |
-    pm2 delete all
-    pm2 start npm -- start
+    npm install
+    sudo pm2 start npm -- start
