@@ -28,7 +28,7 @@
   npm:
     name: pm2
     global: yes
-    version: present
+    state: latest
     #version: 3.5.2
     production: yes
 
