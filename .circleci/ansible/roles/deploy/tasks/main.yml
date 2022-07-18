@@ -11,5 +11,7 @@
 
 - name: "start app "
   shell: |
-    npm install
-    sudo pm2 start npm -- start
+    npm install -f
+    pm2 start npm -- start -f
+    pm2 list
+    pm2 logs --lines 500
