@@ -370,13 +370,33 @@ jobs:
             --output text) 
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"      
-            if curl "${API_URL}/api/status" | grep "ok"; then exit 0; else exit 0; fi
+            if curl "${API_URL}/api/status" | grep "ok"; then exit 0; else exit 1; fi
       - run:
           name: Frontend smoke test.
           command: |
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
             echo ${URL} 
-            if curl ${URL} | grep "Welcome"; then exit 1; else exit 1; fi
+            if curl ${URL} | grep "Welcome"; then exit 0; else exit 1; fi
+      - destroy_environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert_migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+
+  cloudfront-update:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_aws_cli
+      - install_npm_node
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
+            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
       - destroy_environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
