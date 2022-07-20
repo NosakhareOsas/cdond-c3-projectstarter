@@ -428,6 +428,8 @@ jobs:
       - run:
           name: Get old stack workflow id
           command: |
+            OldWorkflowID=$(tail -n 1 OldWorkflowID.txt)
+            echo -------------this is ${OldWorkflowID}
             # Fetch the stack names          
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
@@ -438,6 +440,7 @@ jobs:
             # You can use any condition like:
             # if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
             # if [[ "${OldWorkflowID}" =~ "${STACKS[@]}"  ]]
+            echo -------------again, this is ${OldWorkflowID}
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
             aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
