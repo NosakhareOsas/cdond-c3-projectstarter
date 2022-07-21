@@ -300,6 +300,7 @@ jobs:
             export BACKEND_IP=$(tail -n 1 inventory.txt)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
+            cd ~
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
       - run:
